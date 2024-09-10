@@ -15,3 +15,9 @@ add_executable(ex01
 		ex01/main.cpp
 		ex01/RPN.cpp
 		ex01/RPN.h)
+
+add_executable(ex02
+		ex02/PmergeMe.cpp
+		ex02/PmergeMe.h
+		ex02/main.cpp
+)

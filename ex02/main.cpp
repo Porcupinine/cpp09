@@ -5,28 +5,20 @@
 /*                                                     +:+                    */
 /*   By: laura <laura@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/08/25 14:51:23 by laura         #+#    #+#                 */
-/*   Updated: 2024/08/25 14:51:23 by laura         ########   odam.nl         */
+/*   Created: 2024/09/04 15:32:54 by laura         #+#    #+#                 */
+/*   Updated: 2024/09/04 15:32:54 by laura         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include <stack>
-#include <sstream>
-#include "RPN.h"
+#include "PmergeMe.h"
 
-int main (int argc, char** argv){
-	if (argc != 2){
-		std::cerr<<"Wrong amount of arguments\n";
-		return 1;
+int main (int argc, char** argv) {
+	if (argc < 2) {
+	std::cerr<<"Wrong amount of arguments\n";
+	return 1;
 	}
-	std::string arguments = argv[1];
-	try {
-		RPN x = RPN(arguments);
-	}
-	catch (std::exception &ex) {
-		std::cerr<<"Error: "<<ex.what();
-		return 1;
-	}
+	PmergeMe p1 = PmergeMe(argc, argv);
+	std::cout<<"Parsed\n";
 	return 0;
 }
