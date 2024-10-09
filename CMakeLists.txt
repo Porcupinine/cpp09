@@ -20,4 +20,6 @@ add_executable(ex02
 		ex02/PmergeMe.cpp
 		ex02/PmergeMe.h
 		ex02/main.cpp
+		ex02/PmergeMeList.cpp
+		ex02/PmergeMeVector.cpp
 )

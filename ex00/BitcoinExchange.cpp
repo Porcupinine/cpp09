@@ -48,6 +48,7 @@ namespace {
 		return false;
 	}
 }
+
 BitcoinExchange::BitcoinExchange(const std::string& csvFile) {
 	parseData(csvFile);
 }
@@ -120,8 +121,8 @@ void BitcoinExchange::parseData(const std::string& fileName) {
 ////				std::cerr<<floatValue<<" out of range\n";
 //				continue;
 //			}
-			m_csvData.insert(std::make_pair(parsedDate, floatValue));
-//			std::cout<<"added to data\n";
+			std::pair<Date, float> dataPair = std::make_pair(parsedDate, floatValue);
+			m_csvData.insert(dataPair);
 		}
 		catch (std::exception &ex) {
 		}

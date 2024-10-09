@@ -24,6 +24,7 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define duration(a) std::chrono::duration_cast<std::chrono::nanoseconds>(a).count()
 #define timeNow() std::chrono::high_resolution_clock::now()
 
+using vecPair = std::vector<std::pair<int, std::optional<int>>>;
 
 class PmergeMe {
 public:
@@ -32,18 +33,45 @@ public:
 	~PmergeMe() = default;
 	PmergeMe(const PmergeMe& cp) = default;
 	PmergeMe& operator=(const PmergeMe& cp) = default;
-	void parseData(int argc, char **data);
+
+	template<typename T>
+	void parseData(int argc, char **data, T& container);
 	void sortList();
 	void sortVector();
 
 private:
-	std::vector<int> m_vector;
-	std::list<int> m_list;
-	double m_parseTime {};
+	//data structures
+	std::vector<std::pair<int, std::optional<int>>> m_pairVector;
+	std::list<std::pair<int, std::optional<int>>> m_pairList;
+	std::vector<int> m_vector {};
+	std::list<int> m_list {};
+	std::vector<int> m_jacobVec {};
+	std::vector<int> m_insertOrder{};
+
+	//timers
+	double m_parseListTime {};
+	double m_parseVecTime {};
 	double m_listTime {};
 	double m_vectorTime {};
+
+	//common functions
+	void fillJacobVector();
+	void fillInsertVec();
+	int getJacob(int n);
+
+	//vector functions
+	void sortVecInPairs();
+	void printVecPairs();
+	void mergeSortVec(int start, int end);
+	void mergeVec(int start, int mid, int end);
+	void feedMainVecChain();
+	void insertAppendVecChain();
+	std::vector<int>::iterator binarySearchVec(int target);
+
+
 };
 
+//timer
 template<typename F, typename... Args>
 double funcTime(F func, Args&&... args){
 	TimeVar t1=timeNow();

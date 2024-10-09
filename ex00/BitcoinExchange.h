@@ -23,3 +23,27 @@ private:
 };
 
 #endif //CPP09_BITCOINEXCHANGE_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

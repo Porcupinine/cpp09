@@ -18,7 +18,11 @@ int main (int argc, char** argv) {
 	std::cerr<<"Wrong amount of arguments\n";
 	return 1;
 	}
+	std::cout<<"Before: ";
+	for (size_t it = 1; it < argc; it++) {
+		std::cout<<argv[it]<<" ";
+	}
+	std::cout<<"\n";
 	PmergeMe p1 = PmergeMe(argc, argv);
-	std::cout<<"Parsed\n";
 	return 0;
 }

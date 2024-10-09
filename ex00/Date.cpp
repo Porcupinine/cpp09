@@ -40,7 +40,10 @@ bool Date::validateDate() const {
 		if ((checkLeapYear(m_year) && m_day > 29) || (!checkLeapYear(m_year) && m_day > 28))
 			return false;
 	}
-	else if ((m_month % 2 == 0 && m_day > 30) || (m_month % 2 != 0 && m_day > 31)) {
+	else if (m_day < 1 || ((m_month == 4 || m_month == 6 || m_month == 9 || m_month == 11) && m_day > 30)) {
+		return false;
+	}
+	else if (m_day > 31) {
 		return false;
 	}
 	return true;
@@ -100,7 +103,8 @@ bool Date::operator==(const Date &other) const {
 	if (m_year != other.m_year) return false;
 	if (m_month != other.m_month) return false;
 	if (m_day != other.m_day) return false;
-	return true;}
+	return true;
+}
 
 ssize_t Date::getYear() const {
 	return m_year;
@@ -115,4 +119,7 @@ ssize_t Date::getDay() const {
 }
 
 Date::Date(const Date &cp) : m_date(cp.m_date){
+	m_month = cp.m_month;
+	m_day = cp.m_day;
+	m_year = cp.m_year;
 }
