@@ -29,6 +29,7 @@ PmergeMe::PmergeMe(int argc, char **data) {
 	catch (std::exception &ex) {
 		std::cerr<<"Error: "<<ex.what();
 	}
+	m_insertVecTime = funcTime([&](){fillInsertVec();});
 	m_listTime = funcTime([&](){sortList();});
 	m_vectorTime = funcTime([&](){sortVector();});
 }
@@ -40,9 +41,9 @@ void PmergeMe::fillJacobVector() {
 }
 
 void PmergeMe::fillInsertVec() {
+	fillJacobVector();
 	int lastJ = 0;
 	int lastR = 0;
-//	m_insertOrder.push_back(3);
 	for(auto & x : m_jacobVec) {
 		m_insertOrder.push_back(x);
 		lastR = x -1;
@@ -63,6 +64,7 @@ int PmergeMe::getJacob(int n) {
 			return 1;
 		return getJacob(n - 1) + 2 * getJacob(n - 2);
 }
+
 
 template<typename T>
 void PmergeMe::parseData(int argc, char **data, T& container){

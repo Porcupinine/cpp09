@@ -25,24 +25,26 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define timeNow() std::chrono::high_resolution_clock::now()
 
 using vecPair = std::vector<std::pair<int, std::optional<int>>>;
+using lisPair = std::list<std::pair<int, std::optional<int>>>;
 
 class PmergeMe {
 public:
+	//Constructors/destructor
 	PmergeMe() = delete;
 	PmergeMe(int argc, char **data);
 	~PmergeMe() = default;
 	PmergeMe(const PmergeMe& cp) = default;
 	PmergeMe& operator=(const PmergeMe& cp) = default;
 
+	//parse
 	template<typename T>
 	void parseData(int argc, char **data, T& container);
-	void sortList();
-	void sortVector();
 
 private:
 	//data structures
 	std::vector<std::pair<int, std::optional<int>>> m_pairVector;
 	std::list<std::pair<int, std::optional<int>>> m_pairList;
+	std::list<std::pair<int, std::optional<int>>> m_pairListTest;
 	std::vector<int> m_vector {};
 	std::list<int> m_list {};
 	std::vector<int> m_jacobVec {};
@@ -53,6 +55,7 @@ private:
 	double m_parseVecTime {};
 	double m_listTime {};
 	double m_vectorTime {};
+	double m_insertVecTime {};
 
 	//common functions
 	void fillJacobVector();
@@ -60,15 +63,22 @@ private:
 	int getJacob(int n);
 
 	//vector functions
+	void sortVector();
 	void sortVecInPairs();
 	void printVecPairs();
 	void mergeSortVec(int start, int end);
 	void mergeVec(int start, int mid, int end);
 	void feedMainVecChain();
 	void insertAppendVecChain();
-	std::vector<int>::iterator binarySearchVec(int target);
 
-
+	//list functions
+	void sortList();
+	void sortListInPairs();
+	void printListPairs();
+	void mergeSortList(lisPair& lis);
+	lisPair mergeList(lisPair& left, lisPair& right);
+	void feedMainListChain();
+	void insertAppendListChain();
 };
 
 //timer

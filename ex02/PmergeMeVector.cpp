@@ -77,7 +77,6 @@ void PmergeMe::feedMainVecChain() {
 	}	for (auto & x : m_pairVector) {
 		m_vector.push_back(x.first);
 	}
-//	m_pairVector.erase(m_pairVector.begin());
 }
 
 void PmergeMe::insertAppendVecChain() {
@@ -86,35 +85,15 @@ void PmergeMe::insertAppendVecChain() {
 		if (y < m_pairVector.size()){
 			if (m_pairVector[y].second.has_value()) {
 				int tmp = m_pairVector[y].second.value();
-				auto pos = binarySearchVec(tmp);
+//				auto pos = binarySearchVec(tmp);
+				auto pos = std::lower_bound(m_vector.begin(), m_vector.end(), tmp);
 				m_vector.insert(pos, tmp);
 			}
 		}
 	}
 }
 
-std::vector<int>::iterator PmergeMe::binarySearchVec(int target) {
-	auto low = m_vector.begin();
-	auto high = m_vector.end();
-
-	// Perform binary search
-	while (low < high) {
-		auto mid = low + std::distance(low, high) / 2;
-
-		// Compare the first element of the pair with the target
-		if (*mid < target) {
-			low = mid + 1;  // Move to the right half
-		} else {
-			high = mid;     // Move to the left half or stay at mid
-		}
-	}
-	// Return the iterator where target should be inserted (or found)
-	return low;
-}
-
 void PmergeMe::sortVector() {
-	fillJacobVector();
-	fillInsertVec();
 	std::cout<<"vector before: ";
 	printVecPairs();
 	std::cout<<"\n";
