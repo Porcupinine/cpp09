@@ -6,12 +6,13 @@
 /*   By: laura <laura@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/27 09:05:42 by laura         #+#    #+#                 */
-/*   Updated: 2024/09/27 09:05:42 by laura         ########   odam.nl         */
+/*   Updated: 2024/10/15 14:16:23 by laura         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "PmergeMe.h"
+#include <algorithm>
+#include "../inc/PmergeMe.h"
 
 //using vecPair = std::vector<std::pair<int, std::optional<int>>>;
 
@@ -81,7 +82,7 @@ void PmergeMe::feedMainVecChain() {
 
 void PmergeMe::insertAppendVecChain() {
 	for (auto &x : m_insertOrder) {
-		int y = x - 1;
+		size_t y = x - 1;
 		if (y < m_pairVector.size()){
 			if (m_pairVector[y].second.has_value()) {
 				int tmp = m_pairVector[y].second.value();
@@ -94,21 +95,13 @@ void PmergeMe::insertAppendVecChain() {
 }
 
 void PmergeMe::sortVector() {
-	std::cout<<"vector before: ";
-	printVecPairs();
-	std::cout<<"\n";
 	sortVecInPairs();
 	mergeSortVec(0, m_pairVector.size()-1);
-	std::cout<<"vector after: ";
-	printVecPairs();
-	std::cout<<"\n";
 	feedMainVecChain();
 	insertAppendVecChain();
-	std::cout<<"sorted vector: ";
-	for(auto &x : m_vector){
-		std::cout<<x<<", ";
+	if (!std::is_sorted(m_vector.begin(), m_vector.end())) {
+		std::cout << "Sorting for vector failed\n";
 	}
-	std::cout<<"\n";
 }
 
 

@@ -24,6 +24,7 @@ public:
 
 	bool operator<(const Date& other) const;
 	bool operator==(const Date& other) const;
+	bool operator!=(const Date& other) const;
 
 private:
 	ssize_t m_day {};

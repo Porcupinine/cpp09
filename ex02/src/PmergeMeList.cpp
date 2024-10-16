@@ -6,12 +6,13 @@
 /*   By: laura <laura@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/27 09:05:23 by laura         #+#    #+#                 */
-/*   Updated: 2024/09/27 09:05:23 by laura         ########   odam.nl         */
+/*   Updated: 2024/10/15 14:15:37 by laura         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "PmergeMe.h"
+#include <algorithm>
+#include "../inc/PmergeMe.h"
 
 
 void PmergeMe::sortListInPairs() {
@@ -77,7 +78,7 @@ void PmergeMe::mergeSortList(lisPair& lis) {
 
 void PmergeMe::insertAppendListChain() {
 	for (const auto& x : m_insertOrder) {
-		int y = x - 1;
+		size_t y = x - 1;
 		auto it = m_pairList.begin();
 		std::advance(it, y);
 		if (y< m_pairList.size() && it != m_pairList.end() && it->second.has_value()) {
@@ -89,21 +90,13 @@ void PmergeMe::insertAppendListChain() {
 }
 
 void PmergeMe::sortList() {
-	std::cout<<"list before: ";
-	printListPairs();
-	std::cout<<"\n";
 	sortListInPairs();
 	mergeSortList(m_pairList);
-	std::cout<<"list after: ";
-	printListPairs();
 	feedMainListChain();
 	insertAppendListChain();
-	std::cout<<"\n";
-	std::cout<<"sorted list: ";
-	for(auto &x : m_list){
-		std::cout<<x<<", ";
+	if (!std::is_sorted(m_list.begin(), m_list.end())) {
+		std::cout << "Sorting for vector failed\n";
 	}
-	std::cout<<"\n";
 
 }
 

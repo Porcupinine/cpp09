@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <utility>
 #include <iomanip>
-#include "Date.h"
+#include "../inc/Date.h"
 
 namespace {
 	bool checkLeapYear(ssize_t year) {
@@ -122,4 +122,11 @@ Date::Date(const Date &cp) : m_date(cp.m_date){
 	m_month = cp.m_month;
 	m_day = cp.m_day;
 	m_year = cp.m_year;
+}
+
+bool Date::operator!=(const Date &other) const {
+	if (m_year != other.m_year) return true;
+	if (m_month != other.m_month) return true;
+	if (m_day != other.m_day) return true;
+	return false;
 }

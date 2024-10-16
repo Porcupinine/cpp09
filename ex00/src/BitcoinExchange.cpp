@@ -13,7 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include "BitcoinExchange.h"
+#include "../inc/BitcoinExchange.h"
 
 namespace {
 	bool isFloat(const std::string& str) {

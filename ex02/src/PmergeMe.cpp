@@ -6,37 +6,54 @@
 /*   By: laura <laura@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/09/04 15:34:46 by laura         #+#    #+#                 */
-/*   Updated: 2024/09/04 15:34:46 by laura         ########   odam.nl         */
+/*   Updated: 2024/10/15 15:23:59 by laura         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "PmergeMe.h"
+#include "../inc/PmergeMe.h"
 #include <iostream>
 #include <algorithm>
 
 PmergeMe::PmergeMe(int argc, char **data) {
 	try {
-		m_parseListTime = funcTime([&]() { parseData(argc, data, m_pairList ); });
-		std::cout<<"Parsing list time is: "<<m_parseListTime<<" nanoseconds\n";
+		m_listTime = funcTime([&]() { parseData(argc, data, m_pairList ); });
+//		std::cout<<"Parsing list time is: "<<m_parseListTime<<" nanoseconds\n";
 	}
 	catch (std::exception &ex) {
 		std::cerr<<"Error: "<<ex.what();
 	}
 	try {
-		m_parseVecTime = funcTime([&]() { parseData(argc, data, m_pairVector ); });
-		std::cout<<"Parsing vector time is: "<<m_parseVecTime<<" nanoseconds\n";
+		m_vectorTime = funcTime([&]() { parseData(argc, data, m_pairVector ); });
+//		std::cout<<"Parsing vector time is: "<<m_parseVecTime<<" nanoseconds\n";
 	}
 	catch (std::exception &ex) {
 		std::cerr<<"Error: "<<ex.what();
 	}
 	m_insertVecTime = funcTime([&](){fillInsertVec();});
-	m_listTime = funcTime([&](){sortList();});
-	m_vectorTime = funcTime([&](){sortVector();});
+	m_listTime = funcTime([&](){sortList();}) + m_insertVecTime;
+	m_vectorTime = funcTime([&](){sortVector();}) + m_insertVecTime;
+	std::cout<<"After: ";
+	for(auto &x : m_vector){
+		std::cout<<x<<" ";
+	}
+	std::cout<<"\n";
+	std::cout<<"List time: "<<m_listTime<<" μs\n";
+	std::cout<<"Vector time: "<<m_vectorTime<<" μs\n";
 }
 
 void PmergeMe::fillJacobVector() {
-	for(int x = 3; x < m_pairVector.size()*2+3; x++){
-		m_jacobVec.push_back(getJacob(x));
+	int max = (m_pairVector.size()*2)+3;
+	auto cache = std::vector<std::optional<int>>(max);
+	cache[0] = 0;
+	cache[1] = 1;
+	cache[2] = 1;
+	cache[3] = 3;
+	for( auto i = 3; i < max; ++i) {
+		auto jacob = getJacob(i, cache);
+		m_jacobVec.push_back(jacob);
+		if (jacob > max) {
+			break;
+		}
 	}
 }
 
@@ -57,19 +74,31 @@ void PmergeMe::fillInsertVec() {
 }
 
 
-int PmergeMe::getJacob(int n) {
-		if (n == 0)
-			return 0;
-		if (n == 1)
-			return 1;
-		return getJacob(n - 1) + 2 * getJacob(n - 2);
+int PmergeMe::getJacob(int n, std::vector<std::optional<int>>& cache) {
+		auto jacob = cache.at(n);
+		if (jacob.has_value()) {
+			return jacob.value();
+		}
+		cache[n - 2] = getJacob(n - 2, cache);
+		cache[n - 1] = getJacob(n - 1, cache);
+		cache[n] = cache[n-1].value() + (2 + cache[n - 1].value());
+		return cache[n].value();
 }
 
+void PmergeMe::removeDuplicates(int argc, char **argv) {
+	for (auto it = 1; it < argc; it++){
+		m_data.emplace_back(argv[it]);
+	}
+	std::sort(m_data.begin(), m_data.end());
+	auto it= unique(m_data.begin(), m_data.end());
+	m_data.erase(it, m_data.end());
+}
 
 template<typename T>
 void PmergeMe::parseData(int argc, char **data, T& container){
-	for(size_t it = 1; it < argc; it += 2) {
-		std::string first = data[it];
+	removeDuplicates(argc, data);
+	for(auto it = 0; it < m_data.size(); it += 2) {
+		std::string first = m_data[it];
 		if(first.front() == '-') {
 			throw std::invalid_argument("Read the subject, we only work with positive integers\n");
 		}
@@ -79,10 +108,10 @@ void PmergeMe::parseData(int argc, char **data, T& container){
 		if(!std::all_of(first.begin(), first.end(), [](unsigned char c){ return std::isdigit(c); })){
 			throw std::invalid_argument("Read the subject, we only take integers\n");
 		}
-		int x = std::stoi(data[it]);
+		int x = std::stoi(m_data[it]);
 		std::pair<int, std::optional<int>> contPair;
 		if (it + 1 != argc) {
-			std::string second = data[it+1];
+			std::string second = m_data[it+1];
 			if(second.front() == '-') {
 				throw std::invalid_argument("Read the subject, we only work with positive integers\n");
 			}
@@ -92,7 +121,7 @@ void PmergeMe::parseData(int argc, char **data, T& container){
 			if(!std::all_of(second.begin(), second.end(), [](unsigned char c){ return std::isdigit(c); })){
 				throw std::invalid_argument("Read the subject, we only take integers\n");
 			}
-			int y = std::stoi(data[it + 1]);
+			int y = std::stoi(m_data[it + 1]);
 			contPair = std::make_pair(x, y);
 		} else {
 			contPair = std::make_pair(x, std::nullopt);
@@ -100,8 +129,3 @@ void PmergeMe::parseData(int argc, char **data, T& container){
 		container.push_back(contPair);
 	}
 }
-
-/**
- * sort inside the pairs, sort pair by their heads, firsts are main chain and seconds are apend chain
- *
- */
