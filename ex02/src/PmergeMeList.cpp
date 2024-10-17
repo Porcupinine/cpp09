@@ -94,9 +94,5 @@ void PmergeMe::sortList() {
 	mergeSortList(m_pairList);
 	feedMainListChain();
 	insertAppendListChain();
-	if (!std::is_sorted(m_list.begin(), m_list.end())) {
-		std::cout << "Sorting for vector failed\n";
-	}
-
 }
 

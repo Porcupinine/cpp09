@@ -23,7 +23,7 @@ int main (int argc, char** argv) {
 //	std::cout << std::boolalpha<< (d1 < d2) << "\n"; // Should output false
 //	std::cout << std::boolalpha<< (d2 < d1) << "\n"; // Should output true
 
-	BitcoinExchange b1("/sam/Codam/cpp09/ex00/data.csv");
+	BitcoinExchange b1("./data.csv");
 	b1.convert(argv[1]);
 	return 0;
 }

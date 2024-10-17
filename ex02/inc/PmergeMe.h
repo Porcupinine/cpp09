@@ -15,6 +15,7 @@
 
 
 #include <vector>
+#include <string>
 #include <list>
 #include <chrono>
 #include <utility>

@@ -39,6 +39,12 @@ PmergeMe::PmergeMe(int argc, char **data) {
 	std::cout<<"\n";
 	std::cout<<"List time: "<<m_listTime<<" μs\n";
 	std::cout<<"Vector time: "<<m_vectorTime<<" μs\n";
+	if (!std::is_sorted(m_list.begin(), m_list.end())) {
+		std::cout << "Sorting for vector failed\n";
+	}
+	if (!std::is_sorted(m_vector.begin(), m_vector.end())) {
+		std::cout << "Sorting for vector failed\n";
+	}
 }
 
 void PmergeMe::fillJacobVector() {
@@ -87,11 +93,9 @@ int PmergeMe::getJacob(int n, std::vector<std::optional<int>>& cache) {
 
 void PmergeMe::removeDuplicates(int argc, char **argv) {
 	for (auto it = 1; it < argc; it++){
-		m_data.emplace_back(argv[it]);
+		if (std::find(m_data.begin(), m_data.end(), argv[it]) == m_data.end())
+			m_data.emplace_back(argv[it]);
 	}
-	std::sort(m_data.begin(), m_data.end());
-	auto it= unique(m_data.begin(), m_data.end());
-	m_data.erase(it, m_data.end());
 }
 
 template<typename T>
@@ -110,7 +114,7 @@ void PmergeMe::parseData(int argc, char **data, T& container){
 		}
 		int x = std::stoi(m_data[it]);
 		std::pair<int, std::optional<int>> contPair;
-		if (it + 1 != argc) {
+		if (it + 1 < m_data.size()) {
 			std::string second = m_data[it+1];
 			if(second.front() == '-') {
 				throw std::invalid_argument("Read the subject, we only work with positive integers\n");

@@ -86,7 +86,6 @@ void PmergeMe::insertAppendVecChain() {
 		if (y < m_pairVector.size()){
 			if (m_pairVector[y].second.has_value()) {
 				int tmp = m_pairVector[y].second.value();
-//				auto pos = binarySearchVec(tmp);
 				auto pos = std::lower_bound(m_vector.begin(), m_vector.end(), tmp);
 				m_vector.insert(pos, tmp);
 			}
@@ -99,9 +98,6 @@ void PmergeMe::sortVector() {
 	mergeSortVec(0, m_pairVector.size()-1);
 	feedMainVecChain();
 	insertAppendVecChain();
-	if (!std::is_sorted(m_vector.begin(), m_vector.end())) {
-		std::cout << "Sorting for vector failed\n";
-	}
 }
 
 
